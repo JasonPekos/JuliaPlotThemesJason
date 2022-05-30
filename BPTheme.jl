@@ -1,26 +1,32 @@
-using StatsPlots, PlotThemes, Colors, Distributions, RDatasets
+#=
+Using() this file will change the plotting defaults to something a little nicer for Bayesian stuff. 
+needs Colors, Plots as dependencies in main file !
+=#
 
+plotfont = "Computer Modern"; # Same font as TeX documents for consistency 
 
-theme(:default); # reasonable default font sizes + QOL stuff.
-default(dpi = 300) # crank this up for nicer plots
-default(size = (800,500)); # plot size
-default(grid = false); # gridlines
-default(linewidth=2); # thicker lines
-default(framestyle= :orgin); # box around outside of plot (:box, :semi, :orgin, axis )
-default(label=nothing);# lines by default aren't included in legend, stops y1 ... yn spam. 
+default(dpi = 300,            # Crank this up for nicer plots
+        size = (800,500),     # Plot size
+        grid = false,         # Gridlines
+        linewidth=2,          # Thicker lines
+        framestyle= :orgin,   # Box around outside of plot (:box, :semi, :orgin, axis )
+        label=nothing,        # Lines by default aren't included in legend, stops y1 ... yn spam. 
+        fontfamily=plotfont)
 
-plotfont = "Computer Modern"; # same font as TeX documents for consistency 
-default(fontfamily=plotfont); 
-scalefontsizes(1.2); # make the font a little bigger.
+#scalefontsizes(1.1); # Make the font a little bigger. Very sketchy in how it persists in the REPL.
 
-
-# betancourt colours — should personally default to using c_dark for dark lines and c_light otherwise. 
+# Betancourt colours — should personally default to using c_dark for dark lines and c_light otherwise. 
+# From Brownian Bridge case study. 
 c_light = RGB(colorant"#DCBCBC");
 c_light_highlight = RGB(colorant"#C79999");
 c_mid = RGB(colorant"#B97C7C");
 c_mid_highlight = RGB(colorant"#A25050");
 c_dark = RGB(colorant"#8F2727");
 c_dark_highlight = RGB(colorant"#7C0000");
+
+
+# Colour Palettes -------------------------------------------------------------------------------------
+# Some colour palettes, mostly from Bayes Plot. 
 
 stan_colors = palette([c_dark_highlight,
                        c_dark,
@@ -29,7 +35,7 @@ stan_colors = palette([c_dark_highlight,
                        c_light_highlight,
                        c_light]);
 
-# bayesplot color schemes
+# Bayesplot color schemes
 bayes_blue = palette([RGB(colorant"#011f4b"),
                        RGB(colorant"#03396c"),
                        RGB(colorant"#005b96"),
@@ -44,25 +50,6 @@ bayes_teal = palette([RGB(colorant"#007C7C"),
                       RGB(colorant"#99c7c7"),
                       RGB(colorant"#bcdcdc")]);
 
+# Set default.
+default(palette = stan_colors)
 
-default(palette = bayes_blue)
-
-
-# test facet plot
-x = 1:0.1:10
-ys = x.^2 .+ cos.(x.^2) .- 0.1 .* x.^3
-yl = x.^2  .- 0.1 .* x.^3
-
-plot(layout = 4);
-plot!(x, ys, subplot = 1, seriestype = :scatter, color = 5);
-plot!(x, yl, subplot = 1, color = 2);
-histogram!(rand(Beta(2,6), 10_000), subplot = 2, normalize = true, color = 5);
-plot!(Beta(2,6), color = 2, subplot = 2);
-hline!([2.5], subplot = 3, color = c_mid, linestyle = :dash, linewidth = 1)
-plot!(rand(100,1) .+ 2, subplot = 3, color = c_dark)
-hline!([0.5], subplot = 3, color = 3, linestyle = :dash, linewidth = 1)
-plot!(rand(100,1), subplot = 3, color = 3)
-
-iris = dataset("datasets", "iris")
-@df iris andrewsplot!(:Species, cols(1:4), legend = :topleft, subplot = 4, color = [1 c_dark 4], opacity = 0.7)
-title!("Theme Demo", subplot = 1)

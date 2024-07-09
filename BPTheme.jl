@@ -1,6 +1,6 @@
 #=
 Using() this file will change the plotting defaults to something a little nicer for Bayesian stuff. 
-needs Colors, Plots as dependencies in main file!
+needs Colors, Plots as dependencies in main file !
 =#
 
 plotfont = "Computer Modern"; # Same font as TeX documents for consistency 
